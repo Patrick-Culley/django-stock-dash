@@ -1,0 +1,55 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'stocks/search.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-fluid">
+    {% include "stocks/header.html" %}
+</div>
+
+<container>
+    <row>
+        {% for el in form %}        
+        <div class="row mt-2 text-light">
+            <ul class="col-md-12 bg-dark text-light list-group list-group-horizontal">
+                <li class="col-md-1 bg-dark list-group-item">
+                    <span class="icon"><img src={{el.image}} alt="img" class="rounded-circle img-thumbnail icon"></span> </li>
+                <li class="col-md-2 bg-dark text-light list-group-item pt-4"><strong>{{el.companyName}}</strong> </li>
+                <li class="col-md-1 bg-dark text-light list-group-item pt-4"><strong>{{el.symbol}}</strong></li>
+                <li class="col-md-1 bg-dark text-light list-group-item pt-4"><strong>Current price:</strong><br>{{el.price}}</li>
+                {% if el.changes <= 0 %}
+                    <li class="col-md-1 bg-dark text-light list-group-item pt-4"><strong>Change:</strong><br><span class="text-danger">{{el.changes | floatformat:2 }}</span></li>
+                {% elif el.changes >= 0  %}
+                    <li class="col-md-1 bg-dark text-light list-group-item pt-4"><strong>Change:</strong><br><span class="text-success">{{el.changes | floatformat:2 }}</span></li>
+                {% endif %}
+                <li class="col-md-1 bg-dark text-light list-group-item pt-4"><strong>Range: </strong><br>{{el.range}}</li>
+                <li class="col-md-2 bg-dark text-light list-group-item pt-4"><strong>Market Cap: </strong><br>{{el.mktCap}}</li>
+                <li class="col-md-1 bg-dark text-light list-group-item pt-4"><strong>Beta: </strong><br>{{el.beta}}</li>
+                <li class="col-md-2 bg-dark text-light text-center list-group-item pt-4">
+                    <form action="{% url 'delete' %}" method="POST">
+                        {% csrf_token %}
+                        <input name="delete" type="hidden" value="{{el.symbol}}">
+                        <input type="submit" value="Delete" class="btn btn-lg btn-danger">
+                    </form>
+                </li>
+            </ul>
+        </div>
+        {% endfor %}
+    </row>
+</container>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+<style type="text/css">body { background: black !important; color: white;}</style>
+</body>
+</html>

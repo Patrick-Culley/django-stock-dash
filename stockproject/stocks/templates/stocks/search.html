@@ -1,0 +1,102 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'stocks/search.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container-fluid">
+    {% include "stocks/header.html" %}
+</div>
+
+<div class="container-fluid"> 
+
+<div style="margin-top:10px;"> 
+    <span class="icon">      
+        <img src={{form.icon}} alt="img" class="rounded-circle img-thumbnail icon"> 
+    </span> 
+    <span class="fs-1"><strong>{{form.name}}</strong></span>
+</div>
+
+<h4>{{form.symbol}} {{form.exchange}}</h4>
+<h4>{{form.exhange}}</h4>
+<div class="row">
+
+    <div class="col-md-8">
+        <p class="fs-6">{{form.summary}}</p>
+        <div class="row">
+        {% if form.signed_int > 0 %}
+            <div class="col-md-6">
+                <p class="fs-4">As of  {{form.date}}</p>
+                <p class="fs-3">Current
+                    <span class="text-success">{{form.curr_price}}</span>
+                    <span class="fs-6">USD</span>
+                </p>
+                <p class="fs-3">Change <span class="text-success">{{form.dollar_change}}  {{form.percent_change}}</span></p>
+            </div> 
+        {% else %}
+            <div class="col-md-6">
+                <p class="fs-4">As of  {{form.date}}</p>
+                <p class="fs-3">Current
+                    <span class="text-danger">{{form.curr_price}}</span>
+                    <span class="fs-6">USD</span>
+                </p>
+                <p class="fs-3">Change: <span class="text-danger">{{form.dollar_change}} {{form.percent_change}}</span></p>
+            </div> 
+        {% endif %}
+        {% include "stocks/form.html" %}
+    </div>
+    </div>    
+    <div class="col-md-4 fs-6">
+        <div class="col-md-12 fs-6">
+            <h5 class="financials"><span>Financials ></span></h5>
+        </div>
+        <div class="row">
+        <div class="col-md-6">
+            <h6 class="metrics">Market Cap:  <span class="metric">{{form.m_cap}}</span></h6>
+            <h6 class="metrics">PE Ratio:  <span class="metric">{{form.peRatio}}</span></h6>
+            <h6 class="metrics">EPS Ratio:  <span class="metric">{{form.eps}}</span></h6>
+            <h6 class="metrics">52 Week High:  <span class="metric">{{form.52weekhigh}}</span></h6>
+            <h6 class="metrics">52 Week Low:  <span class="metric">{{form.52weeklow}}</span></h6>
+        </div> 
+
+        <div class="col-md-6">
+            <h6 class="metrics">Target Price: <span class="metric">{{form.targetprice}}</span></h6>
+            <h6 class="metrics">Profit Margin:  <span class="metric">{{form.margin}}</span></h6>
+            <h6 class="metrics">Beta ratio:  <span class="metric">{{form.beta}}</span></h6>
+            <h6 class="metrics">Dividend Yield:  <span class="metric">{{form.div_yield}}</span></h6>
+            <h6 class="metrics">Dividend date:  <span class="metric">{{form.DivDate}}</span></h6>
+        </div>
+        </div>
+    </div>      
+</div>
+
+<div class="col-md-12 mt-3">
+    <ul class="list-group">
+        {% for val in form.news %}
+            <li class="list-group-item bg-dark mb-3">
+                {% if val.banner_image %}
+                <img src={{val.banner_image}} alt="img" class="news_images">
+                <a href= {{val.url}}><strong>{{val.title}}</strong></a>
+                <p class="ms-5 text-light fs-6">{{val.summary}}</p> 
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+</div>  
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+<style type="text/css">body { background: black !important; color: white;}</style>
+</body>
+</html>
