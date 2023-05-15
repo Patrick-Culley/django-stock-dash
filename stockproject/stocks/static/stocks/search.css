@@ -1,14 +1,32 @@
 html body {
-    background: #091121 !important;
-    margin: 30px !important;
-    color: #d1d4dc;
-    font-family: 'Ubuntu', sans-serif;
+    background-color:#161b33;
+    background-image: url("assets/nicholas-cappello-Wb63zqJ5gnE-unsplash.jpg");
+    background-size: cover;
+    color: #faf6ed;
+    font-family: 'Roboto', sans-serif;
 }
 
 td {
     border-left: #22ab94;
 }
 
+table {
+    background-color: #212837;
+}
+
+.material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 48
+  }
+
+.navbar-default {
+    background-color: #F8F8F8;
+    border-color: #E7E7E7;
+}
+  
 .header {
     /* border: 5px solid #22ab94; */
     /* margin-left: auto;
@@ -17,6 +35,7 @@ td {
     width: 50%;
     padding: 20px; */
     font-size: 36px;
+    /* padding-left: 20px; */
 }
 
 .metrics {
@@ -55,4 +74,55 @@ td {
     padding-bottom: 10px;
     font-size: 24px;
     text-align: center;
+}
+
+/* Home Page Table */ 
+.table tr {
+    background-color:#212837;
+    color: white;
+}
+
+.registration-form {
+    width: 35%; 
+    margin: auto;
+    padding: 10px; 
+    text-align: center;
+    background-color: #212837;
+}
+
+.login-form {
+    width: 35%; 
+    margin: auto;
+    padding: 10px; 
+    text-align: center;
+    height: 75%;
+    background-color: #212837;
+}
+
+
+.myfieldclass { 
+    border: 0;
+    outline: 0;
+    color: white;
+    font-size: 16px;
+    border-bottom: 1px solid white;
+    background: transparent;
+    height: 40px;
+    width: 60%;
+}
+
+input:focus {
+    background-color: white;
+    color: black;
+    opacity: .3;
+}
+
+::placeholder {
+    color: white;
+    font-size: 18px;
+    opacity: .5;
+}
+
+label {
+    padding-right: 25px;
 }

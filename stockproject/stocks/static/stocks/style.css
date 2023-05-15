@@ -1,9 +1,7 @@
 html body {
     background-color: #19161c; 
     color: white;
-    font-family: 'Ubuntu', sans-serif;
-    padding-left: 2%;
-    padding-right: 2%;
+    font-family: 'Graduate', cursive;
 }
 
 
@@ -118,6 +116,7 @@ a:hover {
 
 table {
     width: 100%;
+    background-color: #0e151c;
 }
 
 thead tr td{
@@ -157,7 +156,7 @@ form {
     border: 1px solid white;
     border-radius: 5px;
     color: white;
-    background-color: #2a2e39;
+    background-color: #0e151c;
     font-size: 14px;
     height: 30px; 
     width: 450px;
@@ -176,4 +175,5 @@ form {
 .top-movers {
     color: black ;
 }
+
  
