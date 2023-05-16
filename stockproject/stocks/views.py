@@ -6,6 +6,7 @@ from django.db import connection
 from .forms import RegisterUserForm, LoginUserForm
 from django.contrib.auth import logout, login, authenticate
 from django.contrib import messages
+from asgiref.sync import sync_to_async
 
 # WELCOME PAGE
 def siteentry(request): 
@@ -91,12 +92,16 @@ def login(request):
     return render(request, 'stocks/login.html', {'form': form})
 
 # SEARCH BY TICKER SYMBOL 
-def search(request):
+
+async def search(request):
     print(request.session['user'])
     ticker = request.GET.get("search")
-    response = requests.get('https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + ticker.upper() + '&apikey=RIDUWMSKIS4518PV').json()
-    news = requests.get('https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=' + ticker.upper() + '&topics=technology&apikey=RIDUWMSKIS4518PV').json()
-    quote = requests.get('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + ticker.upper() + '&apikey=RIDUWMSKIS4518PV').json() 
+    newsfeed = await requests.get('https://financialmodelingprep.com/api/v3/stock_news?tickers=' + ticker.upper() + '&page=0&apikey=a47ede9cfb01fb619982832def1ce5cc').json()
+    response = await requests.get('https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + ticker.upper() + '&apikey=RIDUWMSKIS4518PV').json()
+    # news = await requests.get('https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=' + ticker.upper() + '&topics=technology&time_from=20220410T0130&apikey=RIDUWMSKIS4518PV').json()
+    quote = await requests.get('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + ticker.upper() + '&apikey=RIDUWMSKIS4518PV').json() 
+    
+    print(newsfeed)
 
     metrics = {
         "name": response["Name"].upper(),
@@ -107,7 +112,7 @@ def search(request):
         "signed_int": 0 if quote["Global Quote"]["09. change"][0] == "-" else 1, 
         "date": quote["Global Quote"]["07. latest trading day"], 
         "exchange": "     |     " + response["Exchange"],
-        "news": news["feed"],
+        "news": newsfeed,
         "symbol": ticker.upper(), 
         "summary": response["Description"],
         "m_cap": conversions(response["MarketCapitalization"]), 
