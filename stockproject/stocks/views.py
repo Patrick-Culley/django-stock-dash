@@ -1,4 +1,4 @@
-import requests, datetime, time
+import requests, datetime, time, json
 from django.shortcuts import render, redirect
 from .models import Stock, Users
 from django.http import HttpResponseRedirect
@@ -6,7 +6,9 @@ from django.db import connection
 from .forms import RegisterUserForm, LoginUserForm
 from django.contrib.auth import logout, login, authenticate
 from django.contrib import messages
-from asgiref.sync import sync_to_async
+import asyncio
+
+from django.http import JsonResponse
 
 # WELCOME PAGE
 def siteentry(request): 
@@ -82,7 +84,7 @@ def login(request):
                     print("USER NAME DOES NOT EXIST!")
                     messages.info(request, "Invalid Credentials.")
                     
-                    return redirect('/home')  
+                    return redirect('/login')  
                 else: 
                     print("SUCCESSFULLY LOGGED IN")
                     request.session['user'] = username
@@ -93,15 +95,16 @@ def login(request):
 
 # SEARCH BY TICKER SYMBOL 
 
-async def search(request):
+def search(request):
     print(request.session['user'])
     ticker = request.GET.get("search")
-    newsfeed = await requests.get('https://financialmodelingprep.com/api/v3/stock_news?tickers=' + ticker.upper() + '&page=0&apikey=a47ede9cfb01fb619982832def1ce5cc').json()
-    response = await requests.get('https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + ticker.upper() + '&apikey=RIDUWMSKIS4518PV').json()
-    # news = await requests.get('https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=' + ticker.upper() + '&topics=technology&time_from=20220410T0130&apikey=RIDUWMSKIS4518PV').json()
-    quote = await requests.get('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + ticker.upper() + '&apikey=RIDUWMSKIS4518PV').json() 
-    
-    print(newsfeed)
+    newsfeed = requests.get('https://financialmodelingprep.com/api/v3/stock_news?tickers=' + ticker.upper() + '&page=0&apikey=a47ede9cfb01fb619982832def1ce5cc').json()
+    time.sleep(.1)
+    response = requests.get('https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + ticker.upper() + '&apikey=RIDUWMSKIS4518PV').json()
+    time.sleep(.1)
+    quote = requests.get('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + ticker.upper() + '&apikey=RIDUWMSKIS4518PV').json() 
+    time.sleep(.1)
+ 
 
     metrics = {
         "name": response["Name"].upper(),
@@ -192,22 +195,32 @@ def addstock(request):
 
 
 def watchlist(request): 
-    metrics = []
+    metrics, quotes = [], []
+    list = [] 
+
     print(request.session['user'])
     # Gets list of tickers from SQL database 
     with connection.cursor() as cursor: 
         cursor.execute("SELECT ticker FROM stocks WHERE username = %s", [request.session['user']])
         result = cursor.fetchall()
-        print(result)
 
     for val in result:
-        print(val[0])
         response = requests.get('https://financialmodelingprep.com/api/v3/profile/' + str(val[0]) + '?apikey=a47ede9cfb01fb619982832def1ce5cc').json() 
+        intraday = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=' + str(val[0]) + '&interval=30min&apikey=RIDUWMSKIS4518PV').json()
         for el in response:
             if el["mktCap"]: 
                 el["mktCap"] = conversions(str(el["mktCap"]))
             metrics.append(el)
-    return render(request, 'stocks/watchlist.html', {'form': metrics})
+
+        time.sleep(.5)
+
+        t_series = intraday['Time Series (30min)']        
+        for num in t_series:
+            quotes.append(t_series[num]['4. close'])
+        list.append(quotes)
+        quotes = []
+    
+    return render(request, 'stocks/watchlist.html', {'form': metrics, 'quotes': json.dumps(list)})
 
 
 def delete(request):
