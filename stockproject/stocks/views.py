@@ -1,14 +1,17 @@
-import requests, datetime, time, json
+import requests, time, json, asyncio, aiohttp
 from django.shortcuts import render, redirect
-from .models import Stock, Users
+from .models import Stock 
 from django.http import HttpResponseRedirect
 from django.db import connection
 from .forms import RegisterUserForm, LoginUserForm
 from django.contrib.auth import logout, login, authenticate
 from django.contrib import messages
-import asyncio
-
+from asgiref.sync import sync_to_async
+from datetime import date
 from django.http import JsonResponse
+
+curr_date = str(date.today())
+user = None
 
 # WELCOME PAGE
 def siteentry(request): 
@@ -76,7 +79,7 @@ def login(request):
         if form.is_valid(): 
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-
+            
             # AUTHENTICATE VIA MySQL 
             with connection.cursor() as cursor: 
                 cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", [username, password])
@@ -88,6 +91,7 @@ def login(request):
                 else: 
                     print("SUCCESSFULLY LOGGED IN")
                     request.session['user'] = username
+                    user = request.session['user']
                     return redirect('/home')
     else: 
         form = LoginUserForm
@@ -193,36 +197,44 @@ def addstock(request):
         return render(request, 'stocks/results.html', 
                       {'form': metrics, 'exists': "false", 'msg': "Successfully added equity to watchlist"})
 
-
-def watchlist(request): 
-    metrics, quotes = [], []
-    list = [] 
-
-    print(request.session['user'])
-    # Gets list of tickers from SQL database 
+# WATCHLIST VIEW HELPER FOR QUERYING DATABASE  
+@sync_to_async
+def get_stocks(request):
     with connection.cursor() as cursor: 
-        cursor.execute("SELECT ticker FROM stocks WHERE username = %s", [request.session['user']])
+        cursor.execute("SELECT ticker FROM stocks WHERE username = %s", ['bootman'])
         result = cursor.fetchall()
-
-    for val in result:
-        response = requests.get('https://financialmodelingprep.com/api/v3/profile/' + str(val[0]) + '?apikey=a47ede9cfb01fb619982832def1ce5cc').json() 
-        intraday = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=' + str(val[0]) + '&interval=30min&apikey=RIDUWMSKIS4518PV').json()
-        for el in response:
-            if el["mktCap"]: 
-                el["mktCap"] = conversions(str(el["mktCap"]))
-            metrics.append(el)
-
-        time.sleep(.5)
-
-        t_series = intraday['Time Series (30min)']        
-        for num in t_series:
-            quotes.append(t_series[num]['4. close'])
-        list.append(quotes)
-        quotes = []
+        print(request.session['user'])
+        return result
     
-    return render(request, 'stocks/watchlist.html', {'form': metrics, 'quotes': json.dumps(list)})
+# WATCHLIST VIEW ASYNC HELPER FOR API CALLS
+async def get_stock_data(session, index):
+    async with session.get('https://financialmodelingprep.com/api/v3/profile/' + index[0] + '?apikey=a47ede9cfb01fb619982832def1ce5cc') as resp:
+        test1 = await resp.json() 
+    async with session.get('https://financialmodelingprep.com/api/v3/historical-chart/30min/' + index[0] + '?apikey=a47ede9cfb01fb619982832def1ce5cc') as con:
+        test2 = await con.json()
+
+    return test1, test2
 
 
+async def watchlist(request):   
+    stocks = await get_stocks(request)
+    metrics, quotes, price = [], [], None
+
+    # Get intraday prices and general financials
+    async with aiohttp.ClientSession() as session:
+        tasks = [get_stock_data(session, stock) for stock in stocks]
+        results = await asyncio.gather(*tasks)
+
+        for test1, test2 in results:
+            metrics.append(test1[0]) 
+            price = [x['close'] for x in test2 if x["date"][0:10] == curr_date]
+            quotes.append(price)
+
+        print(quotes)
+
+    return render(request, 'stocks/watchlist.html', {'form': metrics })
+ 
+ 
 def delete(request):
     stock = request.POST.get('delete')
     Stock.objects.get(ticker=stock).delete()
