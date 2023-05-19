@@ -46,10 +46,10 @@
       </div>
     </div>
   </nav>
-  <div class="jumbotron jumbotron-fluid" style="text-align: left;">
+  <div class="jumbotron jumbotron-fluid" style="text-align: center;">
     <div class="container" style="padding-top: 20px;width: 100%;">
-      <h1 class="display" style="font-weight: bold; font-size: 36px">Watchlist</h1>
-      <p class="lead">Most up-to-date figures.</p>
+      <h1 class="display" style="font-weight: bold; font-size: 96px; letter-spacing: .06em;">Watchlist</h1>
+      <p class="lead"  style="color: #22ab94; font-size: 24px;">Track. Trade. Triumph.</p>
     </div>
   </div>
 
@@ -58,13 +58,11 @@
 <container>
     <row>
         {% for el in form %}        
-        <div class="row mt-2 text-light">
-            <ul class="col-md-12 text-light list-group list-group-horizontal list-group-flush" style="background-color: #0d0c1d;">
-                <li class="col-md-1 list-group-item custom" style="border: none; background-color: #0d0c1d;">
-                    <span class="icon"><img src={{el.image}} alt="img" class="rounded-circle img-thumbnail icon"></span> </li>
-                <li class="col-md-3 text-light list-group-item pt-4" style="border: none; background-color: #0d0c1d;" id="custom"><strong>{{el.companyName}}<br>
+        <div class="row mt-2" style="width: 99%; margin: auto;">
+            <ul class="col-md-12 list-group list-group-horizontal list-group-flush" style="background-color: #0d0c1d; color: #d1d4dc">
+                <li class="col-md-3 text-light list-group-item pt-4" style="border: none; background-color: #0d0c1d; color: #d1d4dc; margin-left: 10px;" id="custom"><strong>
                 <div>
-                  <canvas id="{{ forloop.counter0 }}" style="height: 300px; width: 300px;"></canvas>
+                  <canvas id="{{ forloop.counter0 }}" style="height: 300px; width: 400px;"></canvas>
                 </div>
                   <input value="{{ forloop.counter0 }}" id="quotes" type="number" style="display: none;">
                 <script>
@@ -72,7 +70,6 @@
                   var ctx = document.getElementById('{{ forloop.counter0 }}');
                   var quotes = {{ quotes|safe }}
                   var count = {{forloop.counter0}}
-                  console.log(count)
                   new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -84,35 +81,66 @@
                       }]
                     },
                     options: {
+                      responsive: false, 
                       plugins: {
-                        legend: {
-                          display: false
-                        }
+                        legend: { display: false }
                       },
                       scales: {
-                        y: {
-                          beginAtZero: false
-                        }
+                        y: { beginAtZero: false }
                       }
                     }
                   });
                 </script>
                 </strong></li>
-                <li class="col-md-1 text-light list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 22px;"><strong>Current price:</strong><br>{{el.price}}</li>
-                {% if el.changes <= 0 %}
-                    <li class="col-md-1 text-light list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 22px;"><strong>Change:</strong><br><span class="text-danger">{{el.changes | floatformat:2 }}</span></li>
-                {% elif el.changes >= 0  %}
-                    <li class="col-md-1 text-light list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 22px;"><strong>Change:</strong><br><span class="text-success">{{el.changes | floatformat:2 }}</span></li>
-                {% endif %}
-                <li class="col-md-2 text-light list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 22px;"><strong>Range: </strong><br>{{el.range}}</li>
-                <li class="col-md-2 text-light list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 22px;"><strong>Market Cap: </strong><br>{{el.mktCap}}</li>
-                <li class="col-md-1 text-light list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 22px;"><strong>Beta: </strong><br>{{el.beta}}</li>
-                <li class="col-md-1 text-light text-center list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 22px;">
-                    <form action="{% url 'delete' %}" method="POST">
-                        {% csrf_token %}
-                        <input name="delete" type="hidden" value="{{el.symbol}}">
-                        <input type="submit" value="Delete" class="btn btn-lg btn-danger">
-                    </form>
+                <li class="col-md-1 list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 22px; color: #d1d4dc; margin-right: 0px; padding-right: 0px;">
+                  <span class="icon" style="float: right; margin-right: 0px; text-align: right;"><img src={{el.image}} alt="img" class="rounded-circle img-thumbnail icon" style="text-align: right"></span>
+                </li>
+                <li class="col-md-4 list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 22px; color: #d1d4dc">
+                  <span style="font-size: 32px;"><strong>{{el.companyName}}</strong></span><br>
+                  <span style="font-size: 16px; color: #22ab94;"><strong>{{el.website}}</strong></span><br>
+                  <br>
+                  <div class="row">
+                    <div class="col">
+                      <span style="color:#56769e"><strong>Current price:</strong></span><br>
+                      <span>{{el.price}}</span><br>
+                      <span style="color:#56769e;"><strong>Range:</strong></span><br>
+                      <span>{{el.range}}</span><br>
+                    </div>
+                    <div class="col">
+                      {% if el.changes <= 0 %}
+                      <span style="border: none; background-color: #0d0c1d; font-size: 22px; color:#56769e"><strong style="color: #d1d4dc">Change:</strong><br>
+                      </span>
+                    {% elif el.changes >= 0  %}
+                      <span style="border: none; background-color: #0d0c1d; font-size: 22px; color:#56769e"><strong>Change:</strong><br><span class="text-success">{{el.changes | floatformat:2 }}</span></span><br>
+                    {% endif %}
+                      <span style="color:#56769e"><strong>Average volume</strong></span><br>
+                      <span>{{el.volAvg}}</span>
+                    </div>
+                  </div>
+                  <li class="col-md-4 list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 22px; color: #d1d4dc">
+                    <div class="row">
+                        <form action="{% url 'delete' %}" method="POST">
+                          {% csrf_token %}
+                          <input name="delete" type="hidden" value="{{el.symbol}}">
+                          <input type="submit" value="Delete" class="btn btn-lg btn-danger" style="width: 75%; margin: 0 auto; display: block;">
+                        </form>
+                    </div>  
+                    <br><br>
+                    <div class="row">
+                      <div class="col-6">
+                        <span style="color:#56769e"><strong>Market Cap:</strong></span><br>
+                        <span>{{el.mktCap}}</span><br>
+                        <span style="color:#56769e"><strong>Beta:</strong></span><br>
+                        <span>{{el.beta}}</span><br>
+                      </div>
+                      <div class="col-6">
+                        <span style="color:#56769e"><strong>DCF:</strong></span><br>
+                        <span>{{el.dcf}}</span><br>
+                        <span style="color:#56769e"><strong>Exchange:</strong></span><br>
+                        <span>{{el.exchangeShortName}}</span><br>
+                      </div>
+                    </div>
+                  </li>
                 </li>
             </ul>
         </div>

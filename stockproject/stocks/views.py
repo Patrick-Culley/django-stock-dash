@@ -210,7 +210,7 @@ def get_stocks(request):
 async def get_stock_data(session, index):
     async with session.get('https://financialmodelingprep.com/api/v3/profile/' + index[0] + '?apikey=a47ede9cfb01fb619982832def1ce5cc') as resp:
         test1 = await resp.json() 
-    async with session.get('https://financialmodelingprep.com/api/v3/historical-chart/30min/' + index[0] + '?apikey=a47ede9cfb01fb619982832def1ce5cc') as con:
+    async with session.get('https://financialmodelingprep.com/api/v3/historical-chart/1min/' + index[0] + '?apikey=a47ede9cfb01fb619982832def1ce5cc') as con:
         test2 = await con.json()
 
     return test1, test2
@@ -228,11 +228,12 @@ async def watchlist(request):
         for test1, test2 in results:
             metrics.append(test1[0]) 
             price = [x['close'] for x in test2 if x["date"][0:10] == curr_date]
+            price.reverse()
             quotes.append(price)
 
-        print(quotes)
+    print(curr_date)
 
-    return render(request, 'stocks/watchlist.html', {'form': metrics })
+    return render(request, 'stocks/watchlist.html', {'form': metrics, 'quotes': quotes })
  
  
 def delete(request):
