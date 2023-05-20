@@ -200,10 +200,10 @@ def addstock(request):
 # WATCHLIST VIEW HELPER FOR QUERYING DATABASE  
 @sync_to_async
 def get_stocks(request):
+    user = request.session['user']
     with connection.cursor() as cursor: 
         cursor.execute("SELECT ticker FROM stocks WHERE username = %s", ['bootman'])
         result = cursor.fetchall()
-        print(request.session['user'])
         return result
     
 # WATCHLIST VIEW ASYNC HELPER FOR API CALLS
@@ -215,9 +215,16 @@ async def get_stock_data(session, index):
 
     return test1, test2
 
+# GET USERNAME TO DELETE WATCHLIST ROW
+@sync_to_async
+def get_user(request):
+    user = request.session['user']
+    return user 
+
 
 async def watchlist(request):   
     stocks = await get_stocks(request)
+    user = await get_user(request)
     metrics, quotes, price = [], [], None
 
     # Get intraday prices and general financials
@@ -226,20 +233,24 @@ async def watchlist(request):
         results = await asyncio.gather(*tasks)
 
         for test1, test2 in results:
+            date =  test2[0]["date"][8:10]
+            test1[0]['mktCap'] = conversions(str(test1[0]['mktCap']))
+            test1[0]['volAvg'] = conversions(str(test1[0]['volAvg']))
             metrics.append(test1[0]) 
-            price = [x['close'] for x in test2 if x["date"][0:10] == curr_date]
+            price = [x['close'] for x in test2 if x["date"][8:10] == date]
             price.reverse()
             quotes.append(price)
-
-    print(curr_date)
-
-    return render(request, 'stocks/watchlist.html', {'form': metrics, 'quotes': quotes })
+    
+    return render(request, 'stocks/watchlist.html', {'form': metrics, 'quotes': quotes, 'user': user})
  
  
 def delete(request):
-    stock = request.POST.get('delete')
-    Stock.objects.get(ticker=stock).delete()
-    return redirect("/home/watchlist")
+    user = request.POST.get('delete_user')
+    stock = request.POST.get('delete_symbol')
+    
+    print(user, stock)
+
+    return redirect("/watchlist")   
 
 
 def stock(request):     

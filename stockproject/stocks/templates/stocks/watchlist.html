@@ -38,7 +38,7 @@
             <span style="padding-top: 10px; padding-right: 25px;">Search</span>
             <span class="material-symbols-outlined" style="font-size: 40px;">list</span>
             <span style="padding-top: 10px; padding-right: 25px;">
-            <a href="{% url 'watchlist' %}" style="text-decoration: none; color: white;">Watchlist</a></span>
+            <a href="{% url 'watchlist' %}" style="text-decoration: none; color:white">Watchlist</a></span>
             <button class="btn btn-primary col-12" style="width: 100px; font-size: 18px;"type="submit">
             <a href="{% url 'login' %}" style="text-decoration: none; color: white;">Log Out</a> </button>
             </form>
@@ -48,7 +48,7 @@
   </nav>
   <div class="jumbotron jumbotron-fluid" style="text-align: center;">
     <div class="container" style="padding-top: 20px;width: 100%;">
-      <h1 class="display" style="font-weight: bold; font-size: 96px; letter-spacing: .06em;">Watchlist</h1>
+      <h1 class="display" style="font-weight: bold; font-size: 96px; letter-spacing: .06em; color: #c6c9d4">Watchlist</h1>
       <p class="lead"  style="color: #22ab94; font-size: 24px;">Track. Trade. Triumph.</p>
     </div>
   </div>
@@ -92,36 +92,41 @@
                   });
                 </script>
                 </strong></li>
-                <li class="col-md-1 list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 22px; color: #d1d4dc; margin-right: 0px; padding-right: 0px;">
+                <li class="col-md-1 list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 20px; color: #d1d4dc; margin-right: 0px; padding-right: 0px;">
                   <span class="icon" style="float: right; margin-right: 0px; text-align: right;"><img src={{el.image}} alt="img" class="rounded-circle img-thumbnail icon" style="text-align: right"></span>
                 </li>
-                <li class="col-md-4 list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 22px; color: #d1d4dc">
-                  <span style="font-size: 32px;"><strong>{{el.companyName}}</strong></span><br>
+                <li class="col-md-4 list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 20px; color: #d1d4dc">
+                  <span style="font-size: 32px; color: #bbbecc"><strong>{{el.companyName}}</strong></span><br>
                   <span style="font-size: 16px; color: #22ab94;"><strong>{{el.website}}</strong></span><br>
                   <br>
                   <div class="row">
                     <div class="col">
                       <span style="color:#56769e"><strong>Current price:</strong></span><br>
-                      <span>{{el.price}}</span><br>
-                      <span style="color:#56769e;"><strong>Range:</strong></span><br>
+                      <span><span style="padding-right: 2px;">$</span>{{el.price}}</span><br>
+                      <div style="padding-top: 15px;"> 
+                      <span style="color:#56769e; padding-top: 29px;"><strong>Range:</strong></span><br>
+                      </div>
                       <span>{{el.range}}</span><br>
                     </div>
                     <div class="col">
-                      {% if el.changes <= 0 %}
-                      <span style="border: none; background-color: #0d0c1d; font-size: 22px; color:#56769e"><strong style="color: #d1d4dc">Change:</strong><br>
+                    {% if el.changes < 0 %}
+                      <span style="border: none; background-color: #0d0c1d; font-size: 20px; color:#56769e"><strong style="color: #d1d4dc">Change:</strong><br><span class="text-danger">{{el.changes | floatformat:2 }} %</span></span><br>
                       </span>
                     {% elif el.changes >= 0  %}
-                      <span style="border: none; background-color: #0d0c1d; font-size: 22px; color:#56769e"><strong>Change:</strong><br><span class="text-success">{{el.changes | floatformat:2 }}</span></span><br>
+                      <span style="border: none; background-color: #0d0c1d; font-size: 20px; color:#56769e"><strong>Change:</strong><br><span class="text-success">{{el.changes | floatformat:2 }} %</span></span><br>
                     {% endif %}
+                    <div style="padding-top: 15px;"> 
                       <span style="color:#56769e"><strong>Average volume</strong></span><br>
+                    </div>
                       <span>{{el.volAvg}}</span>
                     </div>
                   </div>
-                  <li class="col-md-4 list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 22px; color: #d1d4dc">
+                  <li class="col-md-4 list-group-item pt-4" style="border: none; background-color: #0d0c1d; font-size: 20px; color: #d1d4dc">
                     <div class="row">
                         <form action="{% url 'delete' %}" method="POST">
                           {% csrf_token %}
-                          <input name="delete" type="hidden" value="{{el.symbol}}">
+                          <input name="delete_user" type="hidden" value="{{user}}">
+                          <input name="delete_symbol" type="hidden" value="{{el.symbol}}">
                           <input type="submit" value="Delete" class="btn btn-lg btn-danger" style="width: 75%; margin: 0 auto; display: block;">
                         </form>
                     </div>  
@@ -130,13 +135,17 @@
                       <div class="col-6">
                         <span style="color:#56769e"><strong>Market Cap:</strong></span><br>
                         <span>{{el.mktCap}}</span><br>
+                        <div style="padding-top: 15px;"> 
                         <span style="color:#56769e"><strong>Beta:</strong></span><br>
+                        </div>
                         <span>{{el.beta}}</span><br>
                       </div>
                       <div class="col-6">
                         <span style="color:#56769e"><strong>DCF:</strong></span><br>
                         <span>{{el.dcf}}</span><br>
+                        <div style="padding-top: 15px;"> 
                         <span style="color:#56769e"><strong>Exchange:</strong></span><br>
+                        </div>
                         <span>{{el.exchangeShortName}}</span><br>
                       </div>
                     </div>
