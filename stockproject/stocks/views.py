@@ -9,6 +9,7 @@ from django.contrib import messages
 from asgiref.sync import sync_to_async
 from datetime import date
 from django.http import JsonResponse
+from django.contrib.messages import get_messages
 
 curr_date = str(date.today())
 user = None
@@ -100,40 +101,42 @@ def login(request):
 # SEARCH BY TICKER SYMBOL 
 
 def search(request):
-    print(request.session['user'])
     ticker = request.GET.get("search")
     newsfeed = requests.get('https://financialmodelingprep.com/api/v3/stock_news?tickers=' + ticker.upper() + '&page=0&apikey=a47ede9cfb01fb619982832def1ce5cc').json()
     time.sleep(.1)
-    response = requests.get('https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + ticker.upper() + '&apikey=RIDUWMSKIS4518PV').json()
-    time.sleep(.1)
-    quote = requests.get('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + ticker.upper() + '&apikey=RIDUWMSKIS4518PV').json() 
-    time.sleep(.1)
- 
 
-    metrics = {
-        "name": response["Name"].upper(),
-        "icon": findIcon(ticker.upper()),
-        "curr_price": quote["Global Quote"]["05. price"],
-        "dollar_change": quote["Global Quote"]["09. change"] + " ",
-        "percent_change": "(" + quote["Global Quote"]["10. change percent"] + ") ",
-        "signed_int": 0 if quote["Global Quote"]["09. change"][0] == "-" else 1, 
-        "date": quote["Global Quote"]["07. latest trading day"], 
-        "exchange": "     |     " + response["Exchange"],
-        "news": newsfeed,
-        "symbol": ticker.upper(), 
-        "summary": response["Description"],
-        "m_cap": conversions(response["MarketCapitalization"]), 
-        "peRatio": response["PERatio"],
-        "eps": response["EPS"],
-        "52weekhigh": response["52WeekHigh"],
-        "52weeklow": response["52WeekLow"],
-        "targetprice": response["AnalystTargetPrice"],
-        "margin": response["ProfitMargin"],
-        "beta": response["Beta"], 
-        "div_yield": response["DividendYield"],
-        # "DivDate": response["ExDividendDate"]
-    }   
-    return render(request, 'stocks/search.html', {'form': metrics})
+    # Confirm if ticker or company name input
+    try:
+        response = requests.get('https://www.alphavantage.co/query?function=OVERVIEW&symbol=' + ticker.upper() + '&apikey=RIDUWMSKIS4518PV').json()
+        quote = requests.get('https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=' + ticker.upper() + '&apikey=RIDUWMSKIS4518PV').json() 
+        
+        metrics = {
+            "name": response["Name"].upper(),
+            "icon": findIcon(ticker.upper()),
+            "curr_price": quote["Global Quote"]["05. price"],
+            "dollar_change": quote["Global Quote"]["09. change"] + " ",
+            "percent_change": "(" + quote["Global Quote"]["10. change percent"] + ") ",
+            "signed_int": 0 if quote["Global Quote"]["09. change"][0] == "-" else 1, 
+            "date": quote["Global Quote"]["07. latest trading day"], 
+            "exchange": "     |     " + response["Exchange"],
+            "news": newsfeed,
+            "symbol": ticker.upper(), 
+            "summary": response["Description"],
+            "m_cap": conversions(response["MarketCapitalization"]), 
+            "peRatio": response["PERatio"],
+            "eps": response["EPS"],
+            "52weekhigh": response["52WeekHigh"],
+            "52weeklow": response["52WeekLow"],
+            "targetprice": response["AnalystTargetPrice"],
+            "margin": response["ProfitMargin"],
+            "beta": response["Beta"], 
+            "div_yield": response["DividendYield"],
+            # "DivDate": response["ExDividendDate"]
+        }   
+        return render(request, 'stocks/search.html', {'form': metrics}) 
+    except: 
+        messages.info(request, "Invalid Ticker Symbol. Please try again.")
+        return redirect('/home')
 
 
 def findIcon(val): 
@@ -193,7 +196,6 @@ def addstock(request):
                 if el["mktCap"]: 
                     el["mktCap"] = conversions(str(el["mktCap"]))
                 metrics.append(el)
-
         return render(request, 'stocks/results.html', 
                       {'form': metrics, 'exists': "false", 'msg': "Successfully added equity to watchlist"})
 
@@ -212,7 +214,6 @@ async def get_stock_data(session, index):
         test1 = await resp.json() 
     async with session.get('https://financialmodelingprep.com/api/v3/historical-chart/1min/' + index[0] + '?apikey=a47ede9cfb01fb619982832def1ce5cc') as con:
         test2 = await con.json()
-
     return test1, test2
 
 # GET USERNAME TO DELETE WATCHLIST ROW
@@ -240,7 +241,6 @@ async def watchlist(request):
             price = [x['close'] for x in test2 if x["date"][8:10] == date]
             price.reverse()
             quotes.append(price)
-    
     return render(request, 'stocks/watchlist.html', {'form': metrics, 'quotes': quotes, 'user': user})
  
  
@@ -248,8 +248,10 @@ def delete(request):
     user = request.POST.get('delete_user')
     stock = request.POST.get('delete_symbol')
     
-    print(user, stock)
-
+    with connection.cursor() as cursor: 
+        cursor.execute("DELETE FROM stocks WHERE username = %s AND ticker = %s", [str(user), str(stock)])
+        result = cursor.fetchall() 
+        print(result)
     return redirect("/watchlist")   
 
 
