@@ -196,8 +196,7 @@ def addstock(request):
                 if el["mktCap"]: 
                     el["mktCap"] = conversions(str(el["mktCap"]))
                 metrics.append(el)
-        return render(request, 'stocks/results.html', 
-                      {'form': metrics, 'exists': "false", 'msg': "Successfully added equity to watchlist"})
+        return redirect('/home')
 
 # WATCHLIST VIEW HELPER FOR QUERYING DATABASE  
 @sync_to_async
