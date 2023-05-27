@@ -87,7 +87,7 @@ table {
     margin: auto;
     padding: 10px; 
     text-align: center;
-    background-color: #212837;
+    background-color: black;
 }
 
 .login-form {
@@ -99,22 +99,21 @@ table {
     background-color: #212837;
 }
 
-
 .myfieldclass { 
     border: 0;
     outline: 0;
-    color: white;
+    color: black;
     font-size: 16px;
     border-bottom: 1px solid white;
-    background: transparent;
+    background: white;
     height: 40px;
     width: 60%;
 }
 
 input:focus {
     background-color: white;
-    color: black;
-    opacity: .3;
+    color: white;
+    opacity: .9
 }
 
 ::placeholder {
@@ -125,4 +124,8 @@ input:focus {
 
 label {
     padding-right: 25px;
+}
+
+input {
+    background-color: white;
 }

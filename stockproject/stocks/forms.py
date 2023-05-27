@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 from django import forms 
 from django.forms import ModelForm
 from .models import Users
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout
+
 
 # CREATE USER REGISTRATION FORM 
 class RegisterUserForm(ModelForm): 
@@ -16,6 +19,11 @@ class RegisterUserForm(ModelForm):
     class Meta: 
         model = Users
         fields = '__all__'
+    
+    def __init__(self, *args, **kwargs): 
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+  
 
 # CREATE USER LOGIN FORM 
 class LoginUserForm(forms.Form): 

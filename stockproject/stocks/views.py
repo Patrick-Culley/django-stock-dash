@@ -60,6 +60,7 @@ def register(request):
             username = form.cleaned_data['username']
 
             request.session['user'] = username
+            print(request.session['user'])
             # with connection.cursor() as cursor: 
             #     cursor.execute("INSERT INTO users (first_name, last_name, email, password, username) VALUES (%s,%s,%s,%s,%s)", 
             #                    [fname, lname, email, password, username])
@@ -203,7 +204,7 @@ def addstock(request):
 def get_stocks(request):
     user = request.session['user']
     with connection.cursor() as cursor: 
-        cursor.execute("SELECT ticker FROM stocks WHERE username = %s", ['bootman'])
+        cursor.execute("SELECT ticker FROM stocks WHERE username = %s", [user])
         result = cursor.fetchall()
         return result
     
