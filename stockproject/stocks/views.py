@@ -24,6 +24,9 @@ def index(request):
     greetingtime = None
     localtime = time.localtime()
 
+    if user is None: 
+        return redirect("/login")
+
     if localtime[3] < 12: 
         greetingtime = "Good Morning"
     elif localtime[3] > 12 and localtime[3] < 18:
@@ -68,7 +71,7 @@ def register(request):
             return HttpResponseRedirect("/home/")
     else: 
         form=RegisterUserForm
-        request.session['user'] = "testuser"
+        request.session['user'] = None
         print(request.session['user'])
             
     return render(request, 'stocks/register.html', {'form': form})

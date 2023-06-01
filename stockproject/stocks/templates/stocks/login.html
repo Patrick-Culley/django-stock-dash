@@ -40,26 +40,28 @@
         </div>
       </div>
 
- 
+      {% load crispy_forms_tags %}
 <!-----USER LOGIN FORM----->
-<div style="margin-top: 3%">
-    <div class="login-form" style="height: 400px;">
-        <h1 style="margin-top: 3%; font-weight: normal;">Login</h1>
-        <form method="POST" style="padding-top: 30px;">
-            {% csrf_token %}
-            {{form.as_p}}
-            <!------IF LOGIN INVALID DISPLAY ERROR MESSAGE-->
-            {% if messages %}
-            <ul class="messages" style="margin: auto; padding-left: 10px;">
-                {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="color: red; list-style-type: none; font-size: 20px;">{{ message }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            <button type="submit" class="btn btn-primary" style="width: 60%; margin-top: 20px; height: 45px; font-size: 21px;">
-            Login
-            </button>
-        </form>
+<div style="margin-top: 3%;">
+    <div class="login-form" style="border-radius: 3%; background-color: black;">
+        <h1 style="font-weight: bold;">Login</h1>
+        <div class="form-group" style="width: 100%;">
+          <form method="POST" style="padding-top: 30px; padding-bottom: 4%;">
+              {% csrf_token %}
+              {{ form | crispy }}
+              <!------IF LOGIN INVALID DISPLAY ERROR MESSAGE-->
+              {% if messages %}
+              <ul class="messages" style="margin: auto; padding-left: 10px;">
+                  {% for message in messages %}
+                  <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="color: red; list-style-type: none; font-size: 20px;">{{ message }}</li>
+                  {% endfor %}
+              </ul>
+              {% endif %}
+              <button type="submit" class="btn btn-primary" style="width: 60%; margin-top: 20px; height: 45px; font-size: 21px;">
+              Login
+              </button>
+          </form>
+        </div>
     </div>
 </div>
 </body>

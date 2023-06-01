@@ -24,14 +24,18 @@
             <span class="material-symbols-outlined" style="font-size: 65px; font-weight: normal;">insert_chart</span>
           </li>
         </ul>
+        
         <form class="d-flex" role="search">
-            <span class="material-symbols-outlined" style="font-size: 40px;">search</span>
-            <span style="padding-top: 10px; padding-right: 25px;">Search</span>
-            <span class="material-symbols-outlined" style="font-size: 40px;">list</span>
+            <span class="material-symbols-outlined" style="font-size: 40px;">
+              <a href="{% url 'index' %}" style="text-decoration: none; color: white;">search</a></span>
             <span style="padding-top: 10px; padding-right: 25px;">
-            <a href="{% url 'watchlist' %}" style="text-decoration: none; color: white;">Watchlist</a></span>
+              <a href="{% url 'index' %}" style="text-decoration: none; color: white;">Search</a></span>
+            <span class="material-symbols-outlined" style="font-size: 40px;">
+              <a href="{% url 'watchlist' %}" style="text-decoration: none; color: white;">list</a></span>
+            <span style="padding-top: 10px; padding-right: 25px;">
+              <a href="{% url 'watchlist' %}" style="text-decoration: none; color: white;">Watchlist</a></span>
             <button class="btn btn-primary col-12" style="width: 100px; font-size: 18px;"type="submit">
-            <a href="{% url 'login' %}" style="text-decoration: none; color: white;">Log Out</a> </button>
+              <a href="{% url 'login' %}" style="text-decoration: none; color: white;">Log Out</a> </button>
             </form>
         </form>
       </div>
@@ -50,8 +54,8 @@
             <div class="most_traded">
                 <div class="jumbotron jumbotron-fluid" style="text-align: center;">
                     <div class="container" style="padding-top: 20px;width: 800px;">
-                      <h1 class="display-4" style="font-weight: bold;">{{greetingtime}} <span style="color: #22ab94;">{{user}},</span></h1>
-                      <h1 class="display-4" style="font-weight: bold;">here are today's top movers</h1>
+                      <h1 class="display-4" style="font-weight: bold;">{{greetingtime}} <span style="color: #22ab94;">{{user}}</span></h1>
+                      <h1 class="display-4" style="font-weight: bold;">Here are today's top movers</h1>
                       <p class="lead">Stocks making the most moves based on total volume.</p>
                     </div>
                   </div>
@@ -92,9 +96,9 @@
                         <td style="color:red;" class="prices">{{stock.change}}</td>
                         <td style="color:red;" class="prices">{{stock.changesPercentage}}</td>
                         {% else %}
-                        <td style="color:green;" class="prices">{{stock.price}}</td>
-                        <td style="color:green;" class="prices">{{stock.change}}</td>
-                        <td style="color:green;" class="prices">{{stock.changesPercentage}}</td>
+                        <td style="color:#26C281;" class="prices">{{stock.price}}</td>
+                        <td style="color:#26C281;" class="prices">{{stock.change}}</td>
+                        <td style="color:#26C281;" class="prices">{{stock.changesPercentage}}</td>
                         {% endif %}
                     </tr>
                     {% endfor %}
@@ -118,9 +122,9 @@
                         <td style="color:red" class="prices">{{stock.change}}</td>
                         <td style="color:red" class="prices">{{stock.changesPercentage}}</td>
                         {% else %}
-                        <td style="color:green" class="prices">{{stock.price}}</td>
-                        <td style="color:green" class="prices">{{stock.change}}</td>
-                        <td style="color:green" class="prices">{{stock.changesPercentage}}</td>
+                        <td style="color:#26C281" class="prices">{{stock.price}}</td>
+                        <td style="color:#26C281" class="prices">{{stock.change}}</td>
+                        <td style="color:#26C281" class="prices">{{stock.changesPercentage}}</td>
                         {% endif %}
                     </tr>
                     {% endfor %}

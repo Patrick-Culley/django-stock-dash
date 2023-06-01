@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms 
 from django.forms import ModelForm
-from .models import Users
+from .models import Users, Stock
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout
 
@@ -26,7 +26,14 @@ class RegisterUserForm(ModelForm):
   
 
 # CREATE USER LOGIN FORM 
-class LoginUserForm(forms.Form): 
+class LoginUserForm(ModelForm): 
     username = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'myfieldclass', 'placeholder': 'Username'}))
     password = forms.CharField(label="", widget=forms.TextInput(attrs={'class': 'myfieldclass', 'placeholder': 'Password'}))
 
+    class Meta: 
+        model = Users
+        fields = ['username', 'password']
+
+    def __init__(self, *args, **kwargs): 
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()

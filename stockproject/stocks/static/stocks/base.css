@@ -38,14 +38,15 @@ table {
 
 .metrics {
     color:  #707d8a;
-    font-size: 16px;
+    font-size: 20px;
     /* text-align: center; */
     padding-right: 10px;
 }
 
 .metric {
     color: white;
-    text-align: center
+    text-align: left;
+    font-size: 20px;
 }
 
 .news_images {  

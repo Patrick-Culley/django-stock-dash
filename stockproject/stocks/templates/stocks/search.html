@@ -51,11 +51,10 @@
     <span class="fs-1"><strong>{{form.name}}</strong></span>
 </div>
 
-<h4>{{form.symbol}} {{form.exchange}}</h4>
-<h4>{{form.exhange}}</h4>
 <div class="row">
-
     <div class="col-md-8">
+        <h4>{{form.symbol}} {{form.exchange}}</h4>
+        <h4>{{form.exhange}}</h4>
         <p class="fs-6">{{form.summary}}</p>
         <div class="row">
         {% if form.signed_int > 0 %}
@@ -78,28 +77,39 @@
             </div> 
         {% endif %}
         {% include "stocks/form.html" %}
+        </div>
     </div>
-    </div>    
-    <div class="col-md-4 fs-6">
-        <div class="col-md-12 fs-6">
-            <h5 class="financials"><span>Financials ></span></h5>
-        </div>
+    <div class="col-md-4">
+        <h5 class="financials"><span>Financials ></span></h5>
         <div class="row">
-        <div class="col-md-6">
-            <h6 class="metrics">Market Cap:  <span class="metric">{{form.m_cap}}</span></h6>
-            <h6 class="metrics">PE Ratio:  <span class="metric">{{form.peRatio}}</span></h6>
-            <h6 class="metrics">EPS Ratio:  <span class="metric">{{form.eps}}</span></h6>
-            <h6 class="metrics">52 Week High:  <span class="metric">{{form.52weekhigh}}</span></h6>
-            <h6 class="metrics">52 Week Low:  <span class="metric">{{form.52weeklow}}</span></h6>
-        </div> 
-
-        <div class="col-md-6">
-            <h6 class="metrics">Target Price: <span class="metric">{{form.targetprice}}</span></h6>
-            <h6 class="metrics">Profit Margin:  <span class="metric">{{form.margin}}</span></h6>
-            <h6 class="metrics">Beta ratio:  <span class="metric">{{form.beta}}</span></h6>
-            <h6 class="metrics">Dividend Yield:  <span class="metric">{{form.div_yield}}</span></h6>
-            <h6 class="metrics">Dividend date:  <span class="metric">{{form.DivDate}}</span></h6>
-        </div>
+            <div class="col-md-12">
+                <div class="row">
+                <div class="col-md-6">
+                    <h6 class="metrics">Market Cap:</h6>  
+                    <h6 class="metrics">PE Ratio: </h6> 
+                    <h6 class="metrics">EPS Ratio:</h6>  
+                    <h6 class="metrics">52 Week High:</h6>  
+                    <h6 class="metrics">52 Week Low: </h6>     
+                    <h6 class="metrics">Target Price: </h6>
+                    <h6 class="metrics">Profit Margin: </h6> 
+                    <h6 class="metrics">Beta ratio: </h6> 
+                    <h6 class="metrics">Dividend Yield: </h6> 
+                    <h6 class="metrics">Dividend date: </h6> 
+                </div>
+                <div class="col-md-6">
+                    <h6 class="metric">{{form.m_cap}}</h6>
+                    <h6 class="metric">{{form.peRatio}}</h6>
+                    <h6 class="metric">{{form.eps}}</h6>
+                    <h6 class="metric">{{form.52weekhigh}}</h6>
+                    <h6 class="metric">{{form.52weeklow}}</h6>
+                    <h6 class="metric">{{form.targetprice}}</h6>
+                    <h6 class="metric">{{form.margin}}</h6>
+                    <h6 class="metric">{{form.beta}}</h6>
+                    <h6 class="metric">{{form.div_yield}}</h6>
+                    <h6 class="metric">{{form.DivDate}}</h6>
+                </div>
+                </div>
+            </div>
         </div>
     </div>      
 </div>
