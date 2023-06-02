@@ -1,5 +1,5 @@
 <div class="col-md-6">     
-    <form name="ticker" action="results/" method="POST">
+    <form name="ticker" action="results/" method="POST" style="width: 350px; padding-top: 20px; padding-bottom: 20px;">
         {% csrf_token %}
         <div class="d-grid gap-1">
             <input name="ticker" type="hidden" value="{{form.symbol}}">

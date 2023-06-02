@@ -44,43 +44,42 @@
 
 <div class="container-fluid"> 
 
-<div style="margin-top:10px;"> 
+<div style="margin-top:30px;"> 
     <span class="icon">      
         <img src={{form.icon}} alt="img" class="rounded-circle img-thumbnail icon"> 
     </span> 
-    <span class="fs-1"><strong>{{form.name}}</strong></span>
+    <span class="fs-1" style="font-size: 44px;"><strong>{{form.name}}</strong></span>
 </div>
 
-<div class="row">
+<div class="row" style="padding-top: 25px;">
     <div class="col-md-8">
-        <h4>{{form.symbol}} {{form.exchange}}</h4>
-        <h4>{{form.exhange}}</h4>
-        <p class="fs-6">{{form.summary}}</p>
+        <h2 style="padding-bottom: 15px; font-size: 34px;">{{form.symbol}}&nbsp|&nbsp{{form.exchange}}</h2>
+        <p class="fs-5">{{form.summary}}</p>
         <div class="row">
         {% if form.signed_int > 0 %}
-            <div class="col-md-6">
-                <p class="fs-4">As of  {{form.date}}</p>
-                <p class="fs-3">Current
+            <div class="col-md-12">
+                <p class="fs-4" style="color: #c6c9d4">(as of&nbsp&nbsp{{form.date}})</p>
+                <p class="fs-4" style="color: #c6c9d4">Current:&nbsp&nbsp
                     <span class="text-success">{{form.curr_price}}</span>
                     <span class="fs-6">USD</span>
                 </p>
-                <p class="fs-3">Change <span class="text-success">{{form.dollar_change}}  {{form.percent_change}}</span></p>
+                <p class="fs-4" style="color: #c6c9d4">Change:&nbsp&nbsp<span class="text-success">{{form.dollar_change}}  {{form.percent_change}}</span></p>
             </div> 
         {% else %}
-            <div class="col-md-6">
-                <p class="fs-4">As of  {{form.date}}</p>
-                <p class="fs-3">Current
+            <div class="col-md-12">
+                <p class="fs-4" style="color: #c6c9d4">As of  {{form.date}}</p>
+                <p class="fs-4">Current:
                     <span class="text-danger">{{form.curr_price}}</span>
                     <span class="fs-6">USD</span>
                 </p>
-                <p class="fs-3">Change: <span class="text-danger">{{form.dollar_change}} {{form.percent_change}}</span></p>
+                <p class="fs-4">Change: <span class="text-danger">{{form.dollar_change}} {{form.percent_change}}</span></p>
             </div> 
         {% endif %}
         {% include "stocks/form.html" %}
         </div>
     </div>
-    <div class="col-md-4">
-        <h5 class="financials"><span>Financials ></span></h5>
+    <div class="col-md-4" style="padding-left: 50px;">
+        <h5 class="financials"><span>Financials</span></h5>
         <div class="row">
             <div class="col-md-12">
                 <div class="row">

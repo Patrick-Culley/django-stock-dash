@@ -99,6 +99,7 @@ def login(request):
                     user = request.session['user']
                     return redirect('/home')
     else: 
+        print(request.session['user'])
         form = LoginUserForm
     return render(request, 'stocks/login.html', {'form': form})
 
@@ -122,7 +123,7 @@ def search(request):
             "percent_change": "(" + quote["Global Quote"]["10. change percent"] + ") ",
             "signed_int": 0 if quote["Global Quote"]["09. change"][0] == "-" else 1, 
             "date": quote["Global Quote"]["07. latest trading day"], 
-            "exchange": "     |     " + response["Exchange"],
+            "exchange": response["Exchange"],
             "news": newsfeed,
             "symbol": ticker.upper(), 
             "summary": response["Description"],

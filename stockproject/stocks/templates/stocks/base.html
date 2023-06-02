@@ -34,9 +34,7 @@
               <a href="{% url 'watchlist' %}" style="text-decoration: none; color: white;">list</a></span>
             <span style="padding-top: 10px; padding-right: 25px;">
               <a href="{% url 'watchlist' %}" style="text-decoration: none; color: white;">Watchlist</a></span>
-            <button class="btn btn-primary col-12" style="width: 100px; font-size: 18px;"type="submit">
-              <a href="{% url 'login' %}" style="text-decoration: none; color: white;">Log Out</a> </button>
-            </form>
+            <a href="{% url 'login' %}" class="btn btn-primary col-12" style="width: 100px; font-size: 18px;">Logout</a> 
         </form>
       </div>
     </div>
@@ -64,7 +62,7 @@
                         <div class="col"></div>
                         <div class="col">
                             <form class="text-align-center">
-                                <input class="form-control" type="text" name="search" placeholder="Search by symbol or company" style="text-align: center"  aria-label="Search">
+                                <input class="form-control" type="text" name="search" placeholder="Search by ticker" style="text-align: center"  aria-label="Search">
                             </form>
                             {% if messages %}
                             <ul class="messages">
